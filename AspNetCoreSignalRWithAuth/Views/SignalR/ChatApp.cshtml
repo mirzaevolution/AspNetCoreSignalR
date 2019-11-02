@@ -1,0 +1,44 @@
+﻿
+@{
+	ViewData["Title"] = "Chat App";
+	string user = @User.FindFirst(c => c.Type == "sys:FullName").Value;
+}
+@section Styles{
+	<style>
+		#chatBox{
+	height:350px;
+	overflow-y:scroll;
+	}
+	</style>
+}
+<h3 class="text-primary">Chat App</h3>
+
+<div class="row">
+	<div class="col-md-6">
+		<br />
+		<div id="chatBox" class="border border-primary m-2 p-2">
+
+		</div>
+	</div>
+	<div class="col-md-6">
+		<br />
+		<p class="lead">Logged as <span class="text-success" id="userName">@user</span></p>
+		<div>
+			<input type="hidden" id="loggedUser" value="@user" />
+			<div class="form-group">
+				<label>Message:</label>
+				<input type="text" class="form-control" id="messageBox" placeholder="Enter chat here" />
+			</div>
+			<div class="form-group">
+				<button disabled id="buttonSend" class="btn btn-primary">Send Message</button>
+				<button disabled id="buttonSendTimeNotif" class="btn btn-primary">Get Server Time</button>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/lib/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
+	<script src="~/app/signalr/chatapp.js" asp-append-version="true"></script>
+}
