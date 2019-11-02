@@ -11,6 +11,11 @@
         "dist/browser/signalr.js.map",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "datatables@1.10.19",
+      "destination": "wwwroot/lib/datatables/"
     }
   ]
 }

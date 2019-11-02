@@ -1,0 +1,53 @@
+﻿@model IntroToAspNetCoreSignalR.Models.ProductViewModel
+
+@{
+	ViewData["Title"] = "Edit Product";
+}
+
+<h2 class="text-primary">Edit Product</h2>
+
+<hr />
+<br />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit" asp-route-token="@ViewBag.Token">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" name="Id" value="@Model.Id" />
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Price" class="control-label"></label>
+				<input asp-for="Price" class="form-control" />
+				<span asp-validation-for="Price" class="text-danger"></span>
+			</div>
+			<input type="hidden" id="Token" value="@ViewBag.Token" />
+
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+<div>
+	<form asp-action="Delete" method="post">
+		<input type="hidden" name="ProductId" value="@Model.Id" />
+		<button class="btn btn-danger" type="submit">Delete This Data</button>
+	</form>
+</div>
+<br />
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	<script src="~/app/products/edit.js" asp-append-version="true"></script>
+}

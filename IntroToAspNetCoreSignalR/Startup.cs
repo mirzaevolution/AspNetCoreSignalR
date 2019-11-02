@@ -11,7 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SignalR;
 using IntroToAspNetCoreSignalR.Hubs;
-
+using IntroToAspNetCoreSignalR.Models;
+using IntroToAspNetCoreSignalR.Services;
 namespace IntroToAspNetCoreSignalR
 {
     public class Startup
@@ -40,6 +41,7 @@ namespace IntroToAspNetCoreSignalR
                 options.KeepAliveInterval = TimeSpan.FromMinutes(1);
             });
 
+            services.AddSingleton<IProductService, ProductService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -63,6 +65,7 @@ namespace IntroToAspNetCoreSignalR
             app.UseSignalR(options =>
             {
                 options.MapHub<ChatHub>("/ChatHub");
+                options.MapHub<NotifyHub>("/NotifyHub");
             });
             app.UseMvc(routes =>
             {

@@ -10,8 +10,8 @@ namespace IntroToAspNetCoreSignalR.Controllers
 {
     public class SignalRController : Controller
     {
-        IHubContext<ChatHub> _chatHubContext;
-        public SignalRController(IHubContext<ChatHub> hubContext)
+        IHubContext<ChatHub,IChatHub> _chatHubContext;
+        public SignalRController(IHubContext<ChatHub, IChatHub> hubContext)
         {
             _chatHubContext = hubContext;
         }
@@ -22,7 +22,8 @@ namespace IntroToAspNetCoreSignalR.Controllers
         [HttpPost]
         public async Task<IActionResult> InvokeTimeNotification()
         {
-            await _chatHubContext.Clients.All.SendAsync("ReceiveMessage", "Server Notification", $"Server time: {DateTimeOffset.Now}");
+            //await _chatHubContext.Clients.All.SendAsync("ReceiveMessage", "Server Notification", $"Server time: {DateTimeOffset.Now}");
+            await _chatHubContext.Clients.All.ReceiveMessage("Server Notification", $"Server time: {DateTimeOffset.Now}");
             return Ok();
         }
     }
