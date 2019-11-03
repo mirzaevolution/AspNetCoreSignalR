@@ -8,11 +8,13 @@
 
 <hr />
 <br />
+<input type="hidden" name="Token" id="Token" value="@ViewBag.Token" />
+
 <div class="row">
 	<div class="col-md-4">
 		<form asp-action="Edit" asp-route-token="@ViewBag.Token">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" name="Id" value="@Model.Id" />
+			<input type="hidden" name="Id" id="Id" value="@Model.Id" />
 			<div class="form-group">
 				<label asp-for="Name" class="control-label"></label>
 				<input asp-for="Name" class="form-control" />
@@ -28,7 +30,6 @@
 				<input asp-for="Price" class="form-control" />
 				<span asp-validation-for="Price" class="text-danger"></span>
 			</div>
-			<input type="hidden" id="Token" value="@ViewBag.Token" />
 
 			<div class="form-group">
 				<input type="submit" value="Save" class="btn btn-primary" />
@@ -37,7 +38,7 @@
 	</div>
 </div>
 <div>
-	<form asp-action="Delete" method="post">
+	<form asp-action="Delete" asp-route-deleteToken="@ViewBag.Token" method="post">
 		<input type="hidden" name="ProductId" value="@Model.Id" />
 		<button class="btn btn-danger" type="submit">Delete This Data</button>
 	</form>

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 using IntroToAspNetCoreSignalR.Hubs;
 using IntroToAspNetCoreSignalR.Models;
 using IntroToAspNetCoreSignalR.Services;
+using AutoMapper;
 namespace IntroToAspNetCoreSignalR
 {
     public class Startup
@@ -40,7 +41,7 @@ namespace IntroToAspNetCoreSignalR
                 options.EnableDetailedErrors = true;
                 options.KeepAliveInterval = TimeSpan.FromMinutes(1);
             });
-
+            services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<IProductService, ProductService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

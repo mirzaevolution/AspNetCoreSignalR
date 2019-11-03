@@ -1,21 +1,24 @@
 ﻿var initSignalR = function () {
     var connection = new signalR.HubConnectionBuilder().withUrl("/NotifyHub").build();
-    connection.on("ReceiveUpdateNotification", function (message, type, token) {
-        //Type
-        //1 = Add
-        //2 = Update
-        //3 = Delete
+    connection.on("ReceiveUpdateNotification", function (message,token, productId) {
         var existingToken = $("#Token").val();
-        if (existingToken != token) {
-            if (parseInt(type) == 2) {
-                alert(message);
-            } else if (parseInt(type) == 3) {
-                alert(message);
-            }
+        var existingProductId = $("#Id").val();
+        if (existingToken != token && existingProductId == productId.toString()) {
+            alert(message);
             console.log(message);
-
+            location.reload();
         }
-        
+    });
+    connection.on("ReceiveDeleteNotification", function (message, token, productId) {
+        var existingToken = $("#Token").val();
+        var existingProductId = $("#Id").val();
+
+        if (existingToken != token && existingProductId == productId.toString()) {
+            alert(message);
+            console.log(message);
+            location.reload();
+        }
+
 
     });
     connection.onclose(function () {

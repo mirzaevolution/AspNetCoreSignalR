@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IntroToAspNetCoreSignalR.Models;
+using IntroToAspNetCoreSignalR.Services.Models;
 
 namespace IntroToAspNetCoreSignalR.Services
 {
     public class ProductService : IProductService
     {
-        private static List<ProductViewModel> _products = new List<ProductViewModel>()
+        private static List<Product> _products = new List<Product>()
         {
-            new ProductViewModel
+            new Product
             {
                  Name = "Asus Rog",
                  Description = "Gaming Notebook",
                  Price = 1200
             },
-            new ProductViewModel
+            new Product
             {
                 Name = "Xiomi Redmi 5A",
                 Description = "Smartphone",
                 Price = 220
             }
         };
-        public Task<bool> Add(ProductViewModel product)
+        public Task<bool> Add(Product product)
         {
             if (product == null)
                 return Task.FromResult(false);
@@ -33,30 +34,30 @@ namespace IntroToAspNetCoreSignalR.Services
 
         public Task<bool> Delete(string id)
         {
-            ProductViewModel product = _products.FirstOrDefault(c => c.Id == id);
+            Product product = _products.FirstOrDefault(c => c.Id == id);
             if (product == null)
                 return Task.FromResult(false);
             _products.Remove(product);
             return Task.FromResult(true);
         }
 
-        public Task<ProductViewModel> Get(string id)
+        public Task<Product> Get(string id)
         {
-            ProductViewModel product = _products.FirstOrDefault(c => c.Id == id);
+            Product product = _products.FirstOrDefault(c => c.Id == id);
 
             return Task.FromResult(product);
         }
 
-        public Task<List<ProductViewModel>> GetAll()
+        public Task<List<Product>> GetAll()
         {
             return Task.FromResult(_products);
         }
 
-        public Task<bool> Update(ProductViewModel product)
+        public Task<bool> Update(Product product)
         {
             if (product == null)
                 return Task.FromResult(false);
-            ProductViewModel existing = _products.FirstOrDefault(c => c.Id == product.Id);
+            Product existing = _products.FirstOrDefault(c => c.Id == product.Id);
             existing.Name = product.Name;
             existing.Description = product.Description;
             existing.Price = product.Price;

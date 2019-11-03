@@ -12,7 +12,9 @@ namespace IntroToAspNetCoreSignalR.Hubs
     public interface INotifyHub
     {
         Task ReceiveNotification(string message, Status status);
-        Task ReceiveUpdateNotification(string message, Status status, string token);
+        Task ReceiveUpdateNotification(string message, string token, string productId);
+        Task ReceiveDeleteNotification(string message, string token, string productId);
+
     }
     public class NotifyHub:Hub<INotifyHub>
     {

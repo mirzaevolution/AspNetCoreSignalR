@@ -6,7 +6,8 @@
                 { data: "name" },
                 { data: "description" },
                 {
-                    data: "price", render: function (data, type, row) {
+                    data: "priceString",
+                    render: function (data, type, row) {
                         return "<span class='text-danger'>$" + data + "</span>";
                     }
                 },

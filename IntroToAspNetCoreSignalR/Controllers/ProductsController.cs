@@ -7,18 +7,24 @@ using Microsoft.AspNetCore.SignalR;
 using IntroToAspNetCoreSignalR.Hubs;
 using IntroToAspNetCoreSignalR.Services;
 using IntroToAspNetCoreSignalR.Models;
+using IntroToAspNetCoreSignalR.Services.Models;
+using AutoMapper;
+
 namespace IntroToAspNetCoreSignalR.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
         private readonly IHubContext<NotifyHub,INotifyHub> _notifyHub;
+        private readonly IMapper _mapper;
         public ProductsController(IProductService productService, 
-            IHubContext<NotifyHub,INotifyHub> notifyHub)
+            IHubContext<NotifyHub,INotifyHub> notifyHub,
+            IMapper mapper)
         {
                 
             _productService = productService;
             _notifyHub = notifyHub;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
@@ -26,7 +32,8 @@ namespace IntroToAspNetCoreSignalR.Controllers
         }
         public async Task<IActionResult> GetAll()
         {
-            List<ProductViewModel> list = await _productService.GetAll();
+            List<Product> originalList = await _productService.GetAll();
+            List<ProductViewModel> list = _mapper.Map<List<Product>, List<ProductViewModel>>(originalList);
             return Json(new
             {
                 data = list
@@ -41,7 +48,8 @@ namespace IntroToAspNetCoreSignalR.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _productService.Add(product);
+                Product originalProduct = _mapper.Map<ProductViewModel, Product>(product);
+                await _productService.Add(originalProduct);
                 await _notifyHub.Clients.All.ReceiveNotification("Someone has added new data",Status.Add);
                 return RedirectToAction("Index");
 
@@ -50,7 +58,8 @@ namespace IntroToAspNetCoreSignalR.Controllers
         }
         public async Task<IActionResult> Edit(string id)
         {
-            ProductViewModel product = await _productService.Get(id);
+            Product originalProduct = await _productService.Get(id);
+            ProductViewModel product = _mapper.Map<Product, ProductViewModel>(originalProduct);
             ViewBag.Token = Guid.NewGuid().ToString("n");
             if (product == null)
                 return RedirectToAction("Index");
@@ -61,10 +70,10 @@ namespace IntroToAspNetCoreSignalR.Controllers
         { 
             if (ModelState.IsValid)
             {
-                await _productService.Update(product);
+                Product originalProduct = _mapper.Map<ProductViewModel, Product>(product);
+                await _productService.Update(originalProduct);
                 await _notifyHub.Clients.All.ReceiveUpdateNotification(
-                    $"Someone has updated product data, please refresh this page", 
-                    Status.Update, token);
+                    $"Someone has updated this product data, please refresh this page",  token, product.Id);
                 await _notifyHub.Clients.All.ReceiveNotification(
                  $"Someone has updated product data, please refresh this page",
                  Status.Update);
@@ -72,11 +81,12 @@ namespace IntroToAspNetCoreSignalR.Controllers
             }
             return View(product);
         }
-        [HttpPost]
-        public async Task<IActionResult> Delete(string ProductId)
+        [HttpPost("Products/Delete/{deleteToken}")]
+        public async Task<IActionResult> Delete(string deleteToken, string ProductId)
         {
             await _productService.Delete(ProductId);
-            await _notifyHub.Clients.All.ReceiveNotification($"Someone has deleted a product data, please refresh this page", Status.Delete);
+            await _notifyHub.Clients.All.ReceiveDeleteNotification
+                ($"Someone has deleted this product data, please refresh this page", deleteToken, ProductId);
 
             return RedirectToAction("Index");
         }
